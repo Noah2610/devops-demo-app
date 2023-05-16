@@ -1,0 +1,14 @@
+{
+    "name": "devops-showcase",
+    "version": "1.0.0",
+    "description": "",
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "scripts": {
+        "test": "jest"
+    },
+    "devDependencies": {
+        "jest": "^29.5.0"
+    }
+}
