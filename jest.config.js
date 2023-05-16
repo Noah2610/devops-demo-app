@@ -144,7 +144,8 @@ module.exports = {
     // snapshotSerializers: [],
 
     // The test environment that will be used for testing
-    // testEnvironment: "jest-environment-node",
+    // NOTE: we overwrite this setting in UI test files (ex. `app.test.js`)
+    testEnvironment: "node",
 
     // Options that will be passed to the testEnvironment
     // testEnvironmentOptions: {},

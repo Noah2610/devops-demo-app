@@ -42,7 +42,9 @@ function doDivide() {
 
 function setResult(result) {
     const resultEl = document.getElementById("result");
-    resultEl.innerText = result;
+    resultEl.textContent = result;
+    console.log(result);
+    console.log(resultEl.textContent);
 }
 
 function getNumberOne() {
