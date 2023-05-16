@@ -63,4 +63,4 @@ function getInputNumber(id) {
     return num;
 }
 
-window.onload = setupUi;
+module.exports = { setupUi };
