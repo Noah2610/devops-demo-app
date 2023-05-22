@@ -8,7 +8,7 @@ source "$( dirname "$0" )/share.sh"
 [ -f "$PIDFILE" ] || exit 1
 pid="$( cat "$PIDFILE" )"
 [ -z "$pid" ] && exit 1
-gid="$( ps opgid= "$pid" )"
+gid="$( ps -o pgid= "$pid" | awk '{ print $1 }' )"
 [ -z "$gid" ] && exit 1
 
 kill -- -"$gid"
