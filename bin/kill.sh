@@ -5,15 +5,13 @@ set -e
 
 source "$( dirname "$0" )/share.sh"
 
-if [ -f "$PIDFILE" ]; then
-    pid="$( cat "$PIDFILE" )"
-    if [ -n "$pid" ]; then
-        kill "$pid"
-        echo > "$PIDFILE"
-        log "Killed previously running server"
-        exit 0
-    fi
-fi
+[ -f "$PIDFILE" ] || exit 1
+pid="$( cat "$PIDFILE" )"
+[ -z "$pid" ] && exit 1
+gid="$( ps opgid= "$pid" )"
+[ -z "$gid" ] && exit 1
 
-log "No server running"
-exit 1
+kill -- -"$gid"
+echo > "$PIDFILE"
+log "Killed previously running server"
+exit 0
