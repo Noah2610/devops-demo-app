@@ -6,6 +6,7 @@
     "author": "",
     "license": "MIT",
     "scripts": {
+        "start": "node server.js",
         "test": "jest",
         "test:watch": "jest --watch",
         "build": "esbuild ./src/app.js --bundle --outfile=./dist/bundle.js",
