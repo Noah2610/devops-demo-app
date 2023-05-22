@@ -1,10 +1,12 @@
+const fs = require("fs/promises");
 const http = require("http");
+const path = require("path");
 
-const HOST = process.env.HOST || "localhost";
+const HOST = process.env.HOST || "127.0.0.1";
 const PORT = process.env.PORT || 8080;
 
 /**
- * @typedef {(req: http.IncomingMessage, res: http.ServerResponse) => void} Route
+ * @typedef {(req: http.IncomingMessage, res: http.ServerResponse) => Promise<void>} Route
  */
 
 /**
@@ -15,7 +17,7 @@ const ROUTES = new Map([
         "GET",
         [
             ["/", rootRoute],
-            [/\.js$/, jsRoute],
+            [/dist\/.+\.(js|css|png|jpg)$/, assetRoute],
         ],
     ],
 ]);
@@ -39,20 +41,82 @@ function getRoute(req) {
     return route || notFoundRoute;
 }
 
-function rootRoute() {}
+/** @type {Route} */
+async function rootRoute(req, res) {
+    const content = await fs.readFile("./index.html");
 
-function jsRoute(req, res) {}
+    res.writeHead(200, { "Content-Type": "text/html" });
+    res.write(content);
+    res.end();
+}
 
-function notFoundRoute() {}
+/** @type {Route} */
+async function assetRoute(req, res) {
+    const filePathRel = req.url.replace(/^\/dist\//, "");
+    const filePath = path.resolve(`${__dirname}/dist/${filePathRel}`);
+    const extension = filePath.split(".").pop();
+    const contentType = getContentTypeForExtension(extension);
+
+    if (!contentType) {
+        throw new Error(`Invalid asset extension: "${extension}"`);
+    }
+
+    const fileExists = await fs
+        .access(filePath)
+        .then(() => true)
+        .catch(() => false);
+    if (!fileExists) {
+        return notFoundRoute(req, res, "Asset not found: ");
+    }
+
+    const content = await fs.readFile(filePath, "utf8");
+
+    res.writeHead(200, { "Content-Type": contentType });
+    res.write(content);
+    res.end();
+}
+
+function getContentTypeForExtension(extension) {
+    switch (extension.toLowerCase()) {
+        case "js":
+            return "text/javascript";
+        case "css":
+            return "text/css";
+        case "png":
+            return "image/png";
+        case "jpg":
+            return "image/jpeg";
+        default:
+            return null;
+    }
+}
+
+/** @type {Route} */
+function notFoundRoute(req, res, prefix = "Route not found: ") {
+    res.writeHead(404);
+    res.write(`${prefix}${req.method} ${req.url}`);
+    res.end();
+}
 
 const server = http.createServer((req, res) => {
     const route = getRoute(req);
     if (!route) {
-        console.error(`Route not found for ${req.method} ${req.url}`);
-        return;
+        const routeName = `${req.method} ${req.url}`;
+        throw new Error(`Route not found for ${routeName}`);
     }
 
-    route(req, res);
+    const promise = route(req, res);
+
+    if (promise) {
+        promise.catch((err) => {
+            console.error(err);
+            res.writeHead(500, "Internal Server Error", {
+                "Content-Type": "text/plain",
+            });
+            res.write("500 Internal Server Error");
+            res.end();
+        });
+    }
 });
 
 server.listen(PORT, HOST, () => {
