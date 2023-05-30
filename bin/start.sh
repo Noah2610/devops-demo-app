@@ -5,6 +5,9 @@ set -e
 
 source "$( dirname "$0" )/share.sh"
 
+[ -z "$HOST" ] && export HOST="0.0.0.0"
+[ -z "$PORT" ] && export PORT="8080"
+
 "${ROOT}/bin/kill.sh" && true
 
 cd "$ROOT"
