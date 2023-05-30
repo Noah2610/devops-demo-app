@@ -17,7 +17,7 @@ const ROUTES = new Map([
         "GET",
         [
             ["/", rootRoute],
-            [/dist\/.+\.(js|css|png|jpg)$/, assetRoute],
+            [/\/.+\.(js|css|png|jpg)$/, assetRoute],
         ],
     ],
 ]);
@@ -43,8 +43,7 @@ function getRoute(req) {
 
 /** @type {Route} */
 async function rootRoute(req, res) {
-    const content = await fs.readFile("./index.html");
-
+    const content = await fs.readFile("./public/index.html");
     res.writeHead(200, { "Content-Type": "text/html" });
     res.write(content);
     res.end();
@@ -52,8 +51,8 @@ async function rootRoute(req, res) {
 
 /** @type {Route} */
 async function assetRoute(req, res) {
-    const filePathRel = req.url.replace(/^\/dist\//, "");
-    const filePath = path.resolve(`${__dirname}/dist/${filePathRel}`);
+    const filePathRel = req.url.replace(/^\//, "");
+    const filePath = path.resolve(`${__dirname}/public/${filePathRel}`);
     const extension = filePath.split(".").pop();
     const contentType = getContentTypeForExtension(extension);
 

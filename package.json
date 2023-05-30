@@ -10,8 +10,8 @@
         "start:dev": "nodemon -w ./server.js ./server.js",
         "test": "jest",
         "test:watch": "jest --watch",
-        "build": "esbuild ./src/app.js --bundle --outfile=./dist/bundle.js",
-        "prebuild": "rm -rf ./dist",
+        "build": "esbuild ./src/app.js --bundle --outfile=./public/bundle.js",
+        "prebuild": "rm -f ./public/bundle.js",
         "dev": "npm-run-all -p 'dev:*'",
         "dev:serve": "live-server . --port 8080 --no-browser",
         "dev:build": "nodemon -w ./src -w ./index.html -x 'npm run build'"
