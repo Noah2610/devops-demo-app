@@ -4,20 +4,31 @@
         <meta charset="UTF-8" />
         <title>Simple Calculator</title>
 
+        <link rel="stylesheet" href="style.css" />
         <script src="bundle.js" type="text/javascript" defer></script>
     </head>
     <body>
-        <label for="number-one">Number One:</label>
-        <input id="number-one" type="number" />
-        <br />
-        <label for="number-two">Number Two:</label>
-        <input id="number-two" type="number" />
-        <br />
-        <button id="add">Add</button>
-        <button id="subtract">Subtract</button>
-        <button id="multiply">Multiply</button>
-        <button id="divide">Divide</button>
-        <br />
-        <div id="result"></div>
+        <main>
+            <div class="number-inputs">
+                <div class="number-input">
+                    <label for="number-one">Number One:</label>
+                    <input id="number-one" type="number" />
+                </div>
+
+                <div class="number-input">
+                    <label for="number-two">Number Two:</label>
+                    <input id="number-two" type="number" />
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button id="add">Add</button>
+                <button id="subtract">Subtract</button>
+                <button id="multiply">Multiply</button>
+                <button id="divide">Divide</button>
+            </div>
+
+            <div id="result" class="result"></div>
+        </main>
     </body>
 </html>
