@@ -18,4 +18,4 @@ jobs:
           chmod 600 ~/.ssh/id
           ssh-keyscan -H "${{ secrets.DEPLOY_SSH_HOST }}" > ~/.ssh/known_hosts
       - name: Run update script on server
-        run: ssh -i ~/.ssh/id root@${{ secrets.DEPLOY_SSH_HOST }} 'update-devops-demo-app'
+        run: ssh -i ~/.ssh/id root@${{ secrets.DEPLOY_SSH_HOST }} -t 'update-devops-demo-app'
