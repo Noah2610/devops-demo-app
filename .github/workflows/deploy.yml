@@ -1,0 +1,20 @@
+name: Deploy App
+
+on:
+  push:
+    branches: [ "master", "ci-playground" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Write SSH key
+        run: |
+          echo "${{ secrets.DEPLOY_SSH_PRIVKEY }}" > ~/.ssh/id
+          chmod 600 ~/.ssh/id
+          ssh-keyscan -H "${{ secrets.DEPLOY_SSH_HOST }}" > ~/.ssh/known_hosts
+      - name: Run update script on server
+        run: ssh -i ~/.ssh/id root@${{ secrets.DEPLOY_SSH_HOST }} 'update-devops-demo-app'
