@@ -3,7 +3,7 @@
 const { readFileSync } = require("fs");
 const { setupUi } = require("../src/ui");
 
-const HTML = readFileSync("./index.html", "utf8");
+const HTML = readFileSync("./public/index.html", "utf8");
 
 function buildUi() {
     const doc = document.open("text/html", "replace");
