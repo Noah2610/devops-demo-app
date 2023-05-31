@@ -17,12 +17,5 @@ jobs:
           check-name: 'Run tests'
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           wait-interval: 5
-      - uses: actions/checkout@v3
-      - name: Write SSH key
-        run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_SSH_PRIVKEY }}" > ~/.ssh/id
-          chmod 600 ~/.ssh/id
-          ssh-keyscan -H "${{ secrets.DEPLOY_SSH_HOST }}" > ~/.ssh/known_hosts
-      - name: Run update script on server
-        run: ssh -i ~/.ssh/id root@${{ secrets.DEPLOY_SSH_HOST }} -t 'update-devops-demo-app'
+      - name: Call update endpoint
+        run: curl ${{ secrets.DEPLOY_UPDATE_URL }}
